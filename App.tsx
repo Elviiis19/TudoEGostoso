@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { CategoryBar } from './components/CategoryBar';
 import { RecipeGrid } from './components/RecipeGrid';
-import { RecipePage } from './components/RecipePage'; // Import the new page
+import { RecipePage } from './components/RecipePage';
 import { Footer } from './components/Footer';
 import { RECIPES } from './constants';
-import { CategoryId, Recipe } from './types';
+import { CategoryId } from './types';
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | 'all'>('all');
