@@ -1,6 +1,5 @@
 import React from 'react';
-
-type View = 'home' | 'recipe' | 'terms' | 'privacy' | 'about' | 'cookies' | 'contact';
+import { View } from '../types';
 
 interface FooterProps {
   onNavigate?: (view: View) => void;

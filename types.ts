@@ -1,5 +1,7 @@
 export type CategoryId = 'economia' | 'emergencia' | 'rapida' | 'zero-waste' | 'airfryer';
 
+export type View = 'home' | 'recipe' | 'terms' | 'privacy' | 'about' | 'cookies' | 'contact' | 'smart-chef';
+
 export interface Category {
   id: CategoryId;
   label: string;

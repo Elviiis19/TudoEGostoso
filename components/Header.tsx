@@ -1,11 +1,13 @@
 import React from 'react';
-import { Menu, ChefHat } from 'lucide-react';
+import { Menu, ChefHat, Sparkles } from 'lucide-react';
+import { View } from '../types';
 
 interface HeaderProps {
   onLogoClick?: () => void;
+  onNavigate?: (view: View) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onLogoClick }) => {
+export const Header: React.FC<HeaderProps> = ({ onLogoClick, onNavigate }) => {
   return (
     <header className="bg-brand text-white sticky top-0 z-50 shadow-md">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -33,8 +35,15 @@ export const Header: React.FC<HeaderProps> = ({ onLogoClick }) => {
         </div>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex gap-6 text-sm font-medium">
+        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <button onClick={onLogoClick} className="hover:text-red-200 transition-colors">Receitas</button>
+          <button 
+            onClick={() => onNavigate?.('smart-chef')}
+            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-all border border-white/20"
+          >
+            <Sparkles className="w-4 h-4 text-yellow-300" />
+            Chef Inteligente
+          </button>
           <a href="#" className="hover:text-red-200 transition-colors">Blog</a>
           <a href="#" className="hover:text-red-200 transition-colors">Enviar Receita</a>
         </nav>

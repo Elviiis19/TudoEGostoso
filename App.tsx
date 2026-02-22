@@ -10,10 +10,9 @@ import { PrivacyPolicy } from './components/PrivacyPolicy';
 import { AboutUs } from './components/AboutUs';
 import { CookiePolicy } from './components/CookiePolicy';
 import { Contact } from './components/Contact';
+import { SmartChef } from './components/SmartChef';
 import { RECIPES } from './constants';
-import { CategoryId } from './types';
-
-type View = 'home' | 'recipe' | 'terms' | 'privacy' | 'about' | 'cookies' | 'contact';
+import { CategoryId, View } from './types';
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | 'all'>('all');
@@ -91,6 +90,8 @@ export default function App() {
             </section>
           </main>
         );
+      case 'smart-chef':
+        return <SmartChef />;
       case 'terms':
         return <TermsOfUse />;
       case 'privacy':
@@ -148,7 +149,7 @@ export default function App() {
         Pular para o conteúdo principal
       </a>
 
-      <Header onLogoClick={() => handleNavigate('home')} />
+      <Header onLogoClick={() => handleNavigate('home')} onNavigate={handleNavigate} />
       
       {renderContent()}
 
