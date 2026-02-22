@@ -5,14 +5,22 @@ import { CategoryBar } from './components/CategoryBar';
 import { RecipeGrid } from './components/RecipeGrid';
 import { RecipePage } from './components/RecipePage';
 import { Footer } from './components/Footer';
+import { TermsOfUse } from './components/TermsOfUse';
+import { PrivacyPolicy } from './components/PrivacyPolicy';
+import { AboutUs } from './components/AboutUs';
+import { CookiePolicy } from './components/CookiePolicy';
+import { Contact } from './components/Contact';
 import { RECIPES } from './constants';
 import { CategoryId } from './types';
+
+type View = 'home' | 'recipe' | 'terms' | 'privacy' | 'about' | 'cookies' | 'contact';
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   
   // Navigation State
+  const [currentView, setCurrentView] = useState<View>('home');
   const [activeRecipeId, setActiveRecipeId] = useState<string | null>(null);
 
   // Derived state
@@ -28,26 +36,110 @@ export default function App() {
 
   const handleOpenRecipe = (recipeId: string) => {
     setActiveRecipeId(recipeId);
+    setCurrentView('recipe');
     window.scrollTo(0, 0);
   };
 
   const handleBackToHome = () => {
     setActiveRecipeId(null);
+    setCurrentView('home');
+    window.scrollTo(0, 0);
+  };
+
+  const handleNavigate = (view: View) => {
+    setCurrentView(view);
+    window.scrollTo(0, 0);
   };
 
   // View Router
-  if (activeRecipe) {
-    return (
-      <div className="min-h-screen flex flex-col font-sans bg-white">
-        <Header />
-        <RecipePage recipe={activeRecipe} onBack={handleBackToHome} />
-        <Footer />
-      </div>
-    );
-  }
+  const renderContent = () => {
+    switch (currentView) {
+      case 'recipe':
+        if (activeRecipe) {
+          return <RecipePage recipe={activeRecipe} onBack={handleBackToHome} />;
+        }
+        // Fallback if recipe not found, render Home
+        return (
+          <main id="main-content" className="flex-grow">
+            <Hero 
+              onSearch={setSearchQuery} 
+              searchValue={searchQuery}
+            />
+            
+            <CategoryBar 
+              selected={selectedCategory} 
+              onSelect={setSelectedCategory} 
+            />
+
+            <section 
+              className="container mx-auto px-4 py-8 max-w-6xl"
+              aria-label="Lista de Receitas"
+            >
+              <div className="flex justify-between items-baseline mb-6">
+                <h2 className="text-2xl font-bold text-brand-dark">
+                  {selectedCategory === 'all' ? 'Destaques do Dia' : 'Receitas Selecionadas'}
+                </h2>
+                <span className="text-sm text-slate-500 font-medium">
+                  {filteredRecipes.length} receitas encontradas
+                </span>
+              </div>
+
+              <RecipeGrid 
+                recipes={filteredRecipes} 
+                onRecipeClick={handleOpenRecipe} 
+              />
+            </section>
+          </main>
+        );
+      case 'terms':
+        return <TermsOfUse />;
+      case 'privacy':
+        return <PrivacyPolicy />;
+      case 'about':
+        return <AboutUs />;
+      case 'cookies':
+        return <CookiePolicy />;
+      case 'contact':
+        return <Contact />;
+      case 'home':
+      default:
+        return (
+          <main id="main-content" className="flex-grow">
+            <Hero 
+              onSearch={setSearchQuery} 
+              searchValue={searchQuery}
+            />
+            
+            <CategoryBar 
+              selected={selectedCategory} 
+              onSelect={setSelectedCategory} 
+            />
+
+            <section 
+              className="container mx-auto px-4 py-8 max-w-6xl"
+              aria-label="Lista de Receitas"
+            >
+              <div className="flex justify-between items-baseline mb-6">
+                <h2 className="text-2xl font-bold text-brand-dark">
+                  {selectedCategory === 'all' ? 'Destaques do Dia' : 'Receitas Selecionadas'}
+                </h2>
+                <span className="text-sm text-slate-500 font-medium">
+                  {filteredRecipes.length} receitas encontradas
+                </span>
+              </div>
+
+              <RecipeGrid 
+                recipes={filteredRecipes} 
+                onRecipeClick={handleOpenRecipe} 
+              />
+            </section>
+          </main>
+        );
+    }
+  };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col font-sans bg-ice">
       {/* Skip to content for accessibility */}
       <a 
         href="#main-content" 
@@ -56,40 +148,11 @@ export default function App() {
         Pular para o conteúdo principal
       </a>
 
-      <Header />
+      <Header onLogoClick={() => handleNavigate('home')} />
       
-      <main id="main-content" className="flex-grow">
-        <Hero 
-          onSearch={setSearchQuery} 
-          searchValue={searchQuery}
-        />
-        
-        <CategoryBar 
-          selected={selectedCategory} 
-          onSelect={setSelectedCategory} 
-        />
+      {renderContent()}
 
-        <section 
-          className="container mx-auto px-4 py-8 max-w-6xl"
-          aria-label="Lista de Receitas"
-        >
-          <div className="flex justify-between items-baseline mb-6">
-            <h2 className="text-2xl font-bold text-brand-dark">
-              {selectedCategory === 'all' ? 'Destaques do Dia' : 'Receitas Selecionadas'}
-            </h2>
-            <span className="text-sm text-slate-500 font-medium">
-              {filteredRecipes.length} receitas encontradas
-            </span>
-          </div>
-
-          <RecipeGrid 
-            recipes={filteredRecipes} 
-            onRecipeClick={handleOpenRecipe} 
-          />
-        </section>
-      </main>
-
-      <Footer />
+      <Footer onNavigate={handleNavigate} />
     </div>
   );
 }
